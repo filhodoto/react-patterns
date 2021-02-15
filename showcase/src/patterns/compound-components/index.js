@@ -84,6 +84,16 @@ const MediumClap = ({ children }) => {
 };
 
 /** ====================================
+    * Example of how we could construct the 
+    * components to have a relationship between them when we called
+    * them as if MediumClap is the main component
+==================================== **/
+
+// A Component is in fact an object so we can add another
+// key to it that returns the component ClapIcon
+MediumClap.Icon = ClapIcon;
+
+/** ====================================
     *        🔰USAGE
     Below's how a potential user
     may consume the component API
@@ -93,7 +103,8 @@ const Usage = () => {
   return (
     <div>
       <MediumClap>
-        <ClapIcon />
+        {/* Call ClapIcon via Medium user as we defined it in line 94 */}
+        <MediumClap.Icon />
         <ClapCount />
         <CountTotal />
       </MediumClap>
