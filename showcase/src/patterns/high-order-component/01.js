@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { generateRandomNumber } from '../utils/generateRandomNumber';
-import styles from './index.css';
+import { generateRandomNumber } from '../../utils/generateRandomNumber';
+import styles from '../index.css';
 
 /** ====================================
  *          🔰HOC

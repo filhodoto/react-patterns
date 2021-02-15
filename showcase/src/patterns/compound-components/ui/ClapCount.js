@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../index.css';
+import styles from '../../index.css';
 const ClapCount = React.memo(({ count, setRefs }) => {
   console.log('render ClapCount');
   return (

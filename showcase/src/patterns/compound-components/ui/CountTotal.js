@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../index.css';
+import styles from '../../index.css';
 
 export default React.memo(function CountTotal({ countTotal, setRefs }) {
   console.log('render CountTotal');
