@@ -1,4 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 import { generateRandomNumber } from '../../utils/generateRandomNumber';
 import styles from '../index.css';
 
@@ -30,7 +36,7 @@ const initialState = {
 ==================================== **/
 export const MediumClapContext = React.createContext();
 
-const MediumClap = ({ children }) => {
+const MediumClap = ({ children, updateUsageCount }) => {
   const [clapState, setClapState] = useState(initialState);
   const [elRefs, setElRefs] = useState({}); // Object with ref for each node element
 
@@ -47,6 +53,23 @@ const MediumClap = ({ children }) => {
       [node.dataset.refkey]: node,
     }));
   }, []);
+
+  // Using useRef to maintain a state between renders an prevent
+  // below useEffect to render on mount (without us clicking on clap)
+  const componentJustMounted = useRef(true);
+
+  // Listen for count change
+  useEffect(() => {
+    // If component just mounted, we change the ref and do nothing else
+    if (componentJustMounted.current) {
+      componentJustMounted.current = false;
+    } else {
+      // If useEffect ran but component as already mounted that means it is running
+      // because clapState.count changed. So we ran our callback function to update count in <Usage>
+      console.log('useEffect invoked');
+      updateUsageCount && updateUsageCount(clapState.count);
+    }
+  }, [clapState.count]);
 
   // Pass node refs to our custom hooks
   const animationTimeline = useClapAnimation({
@@ -69,8 +92,16 @@ const MediumClap = ({ children }) => {
     }));
   };
 
+  // Memoize the values we hare passing to the Context Provider
+  const memoizedValues = useMemo(() => {
+    return {
+      ...clapState,
+      setRefs,
+    };
+  }, [clapState, setRefs]);
+
   return (
-    <MediumClapContext.Provider value={{ ...clapState, setRefs }}>
+    <MediumClapContext.Provider value={memoizedValues}>
       <button
         ref={setRefs}
         data-refkey='clapRef'
@@ -100,15 +131,23 @@ MediumClap.Icon = ClapIcon;
 ==================================== **/
 
 const Usage = () => {
+  const [usageCount, setUsageCount] = useState(0);
+
+  // Callbakc function will pass as prop to Medium so we can get
+  // the original "count" value outside of MediumClap and update this state with it
+  const updateUsageCount = (count) => setUsageCount(count);
+
   return (
     <div>
-      <MediumClap>
+      <MediumClap updateUsageCount={updateUsageCount}>
         {/* Call ClapIcon via Medium user as we defined it in line 94 */}
         <MediumClap.Icon />
         <ClapCount />
         <CountTotal />
       </MediumClap>
-      <span>compound-component</span>
+      <div
+        className={styles.info}
+      >{`compound-component clicked ${usageCount}`}</div>
     </div>
   );
 };
