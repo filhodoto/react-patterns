@@ -33,7 +33,8 @@ const MediumClap = () => {
   const MAXIMUM_USER_CLAP = 5;
 
   // Set refs for each element we use on this
-  // For each node we set the refs object list of objects with {[key of el]: the node element}
+  // For each node we set the refs object list of objects with {[key of el]: the node element},
+  // we get the key from a dataset element we created, data-refkey.
   // We use useCallback so we don't have to create a new instance of this function everytime the
   // components that will take this as prop will re-render
   const setRefs = useCallback((node) => {
