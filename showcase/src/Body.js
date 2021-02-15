@@ -120,22 +120,15 @@ const RouteComponent = ({
   const firstLetterCap = (str) => str.slice(0, 1).toUpperCase() + str.slice(1);
   const title = pattern.split('-').map(firstLetterCap).join(' ');
 
-  const indexToTwoDigits = (i) => (i < 10 ? `0${i}` : i);
-  const beforeAndAfterPatternNumbers = [patternNumber, patternNumber + 1].map(
-    indexToTwoDigits
-  );
-
   // Demo to be shown in Display Boxes
   let Demo1, Demo2;
   try {
-    Demo1 = require(`./patterns/${prevPattern}/${beforeAndAfterPatternNumbers[0]}`)
-      .default;
+    Demo1 = require(`./patterns/${prevPattern}/`).default;
   } catch (error) {
     Demo1 = () => null;
   }
   try {
-    Demo2 = require(`./patterns/${pattern}/${beforeAndAfterPatternNumbers[1]}`)
-      .default;
+    Demo2 = require(`./patterns/${pattern}/`).default;
   } catch (error) {
     Demo2 = () => null;
   }
