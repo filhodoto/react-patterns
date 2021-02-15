@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState } from 'react';
 import { generateRandomNumber } from '../../utils/generateRandomNumber';
 import styles from '../index.css';
 
@@ -24,10 +24,14 @@ const initialState = {
   isClicked: false,
 };
 
-const MediumClap = () => {
-  const [{ count, countTotal, isClicked }, setClapState] = useState(
-    initialState
-  );
+/** ====================================
+ *      Create Context
+ * this is the context we are gonna pass to MediumClapContext children
+==================================== **/
+export const MediumClapContext = React.createContext();
+
+const MediumClap = ({ children }) => {
+  const [clapState, setClapState] = useState(initialState);
   const [elRefs, setElRefs] = useState({}); // Object with ref for each node element
 
   const MAXIMUM_USER_CLAP = 5;
@@ -58,7 +62,7 @@ const MediumClap = () => {
     setClapState((prevState) => ({
       count: Math.min(prevState.count + 1, MAXIMUM_USER_CLAP),
       countTotal:
-        count < MAXIMUM_USER_CLAP
+        clapState.count < MAXIMUM_USER_CLAP
           ? prevState.countTotal + 1
           : prevState.countTotal,
       isClicked: true,
@@ -66,16 +70,16 @@ const MediumClap = () => {
   };
 
   return (
-    <button
-      ref={setRefs}
-      data-refkey='clapRef'
-      className={styles.clap}
-      onClick={handleClapClick}
-    >
-      <ClapIcon isClicked={isClicked} setRefs={setRefs} />
-      <ClapCount count={count} setRefs={setRefs} />
-      <CountTotal countTotal={countTotal} setRefs={setRefs} />
-    </button>
+    <MediumClapContext.Provider value={{ ...clapState, setRefs }}>
+      <button
+        ref={setRefs}
+        data-refkey='clapRef'
+        className={styles.clap}
+        onClick={handleClapClick}
+      >
+        {children}
+      </button>
+    </MediumClapContext.Provider>
   );
 };
 
@@ -88,7 +92,11 @@ const MediumClap = () => {
 const Usage = () => {
   return (
     <div>
-      <MediumClap />
+      <MediumClap>
+        <ClapIcon />
+        <ClapCount />
+        <CountTotal />
+      </MediumClap>
       <span>compound-component</span>
     </div>
   );

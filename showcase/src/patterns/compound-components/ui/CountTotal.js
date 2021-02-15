@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { MediumClapContext } from '..';
 import styles from '../../index.css';
 
-export default React.memo(function CountTotal({ countTotal, setRefs }) {
+export default React.memo(function CountTotal() {
+  const { countTotal, setRefs } = useContext(MediumClapContext);
   console.log('render CountTotal');
   return (
     <span
