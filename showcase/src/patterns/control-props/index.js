@@ -7,10 +7,10 @@ import React, {
   useContext,
   useEffect,
   useRef,
-} from "react";
-import mojs from "mo-js";
-import styles from "../index.css";
-import userCustomStyles from "../usage.css";
+} from 'react';
+import mojs from 'mo-js';
+import styles from '../index.css';
+import userCustomStyles from '../usage.css';
 
 const initialState = {
   count: 0,
@@ -45,9 +45,9 @@ const useClapAnimation = ({ clapEl, countEl, clapTotalEl }) => {
       count: 5,
       angle: 30,
       children: {
-        shape: "polygon",
+        shape: 'polygon',
         radius: { 6: 0 },
-        stroke: "rgba(211,54,0,0.5)",
+        stroke: 'rgba(211,54,0,0.5)',
         strokeWidth: 2,
         angle: 210,
         delay: 30,
@@ -63,8 +63,8 @@ const useClapAnimation = ({ clapEl, countEl, clapTotalEl }) => {
       angle: 25,
       duration: tlDuration,
       children: {
-        shape: "circle",
-        fill: "rgba(149,165,166,0.5)",
+        shape: 'circle',
+        fill: 'rgba(149,165,166,0.5)',
         delay: 30,
         speed: 0.2,
         radius: { 3: 0 },
@@ -91,11 +91,11 @@ const useClapAnimation = ({ clapEl, countEl, clapTotalEl }) => {
       y: { 0: -3 },
     });
 
-    if (typeof clapEl === "string") {
-      const clap = document.getElementById("clap");
-      clap.style.transform = "scale(1,1)";
+    if (typeof clapEl === 'string') {
+      const clap = document.getElementById('clap');
+      clap.style.transform = 'scale(1,1)';
     } else {
-      clapEl.style.transform = "scale(1,1)";
+      clapEl.style.transform = 'scale(1,1)';
     }
 
     const newAnimationTimeline = animationTimeline.add([
@@ -176,7 +176,7 @@ const MediumClap = ({
     [getState, setRef]
   );
 
-  const classNames = [styles.clap, className].join(" ").trim();
+  const classNames = [styles.clap, className].join(' ').trim();
 
   return (
     <Provider value={memoizedValue}>
@@ -200,8 +200,8 @@ const MediumClap = ({
 const ClapIcon = ({ style: userStyles = {}, className }) => {
   const { isClicked } = useContext(MediumClapContext);
 
-  const classNames = [styles.icon, isClicked ? styles.checked : "", className]
-    .join(" ")
+  const classNames = [styles.icon, isClicked ? styles.checked : '', className]
+    .join(' ')
     .trim();
 
   return (
@@ -220,7 +220,7 @@ const ClapIcon = ({ style: userStyles = {}, className }) => {
 };
 const ClapCount = ({ style: userStyles = {}, className }) => {
   const { count, setRef } = useContext(MediumClapContext);
-  const classNames = [styles.count, className].join(" ").trim();
+  const classNames = [styles.count, className].join(' ').trim();
 
   return (
     <span
@@ -236,7 +236,7 @@ const ClapCount = ({ style: userStyles = {}, className }) => {
 
 const CountTotal = ({ style: userStyles = {}, className }) => {
   const { countTotal, setRef } = useContext(MediumClapContext);
-  const classNames = [styles.total, className].join(" ").trim();
+  const classNames = [styles.total, className].join(' ').trim();
 
   return (
     <span
@@ -276,7 +276,7 @@ const Usage = () => {
   };
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: '100%' }}>
       <MediumClap
         values={state}
         onClap={handleClap}

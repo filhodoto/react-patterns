@@ -4,22 +4,23 @@ import React, {
   useState,
   useEffect,
   useRef,
-} from "react";
-import { generateRandomNumber } from "../../utils/generateRandomNumber";
-import styles from "../index.css";
+} from 'react';
+import { generateRandomNumber } from '../../utils/generateRandomNumber';
+import styles from '../index.css';
 
 /** ====================================
  *          Custom Hook
 ==================================== **/
-import useClapAnimation from "../hooks/useClapAnimation";
+import useClapAnimation from '../hooks/useClapAnimation';
+import useDOMRef from '../hooks/useDOMRef';
 
 /** ====================================
  *      🔰SubComponents
 Smaller Component used by <MediumClap />
 ==================================== **/
-import ClapIcon from "./ui/ClapIcon";
-import ClapCount from "./ui/ClapCount";
-import CountTotal from "./ui/CountTotal";
+import ClapIcon from './ui/ClapIcon';
+import ClapCount from './ui/ClapCount';
+import CountTotal from './ui/CountTotal';
 
 /** ====================================
  *      🔰 MediumClap
@@ -36,23 +37,29 @@ const initialState = {
 ==================================== **/
 export const MediumClapContext = React.createContext();
 
+// const useDOMRef = () => {
+//   const [DOMRef, setRefState] = useState({}); // Object with ref for each node element
+
+//   // Set refs for each element we use on this
+//   // For each node we set the refs object list of objects with {[key of el]: the node element},
+//   // we get the key from a dataset element we created, data-refkey.
+//   // We use useCallback so we don't have to create a new instance of this function everytime the
+//   // components that will take this as prop will re-render
+//   const setRefs = useCallback((node) => {
+//     setRefState((prevRefState) => ({
+//       ...prevRefState,
+//       [node.dataset.refkey]: node,
+//     }));
+//   }, []);
+
+//   // On a useHook we should return the sate and the update state function
+//   return [DOMRef, setRefs];
+// };
+
 const MediumClap = ({ children, updateUsageCount }) => {
-  const [clapState, setClapState] = useState(initialState);
-  const [elRefs, setElRefs] = useState({}); // Object with ref for each node element
-
   const MAXIMUM_USER_CLAP = 5;
-
-  // Set refs for each element we use on this
-  // For each node we set the refs object list of objects with {[key of el]: the node element},
-  // we get the key from a dataset element we created, data-refkey.
-  // We use useCallback so we don't have to create a new instance of this function everytime the
-  // components that will take this as prop will re-render
-  const setRefs = useCallback((node) => {
-    setElRefs((prevRefState) => ({
-      ...prevRefState,
-      [node.dataset.refkey]: node,
-    }));
-  }, []);
+  const [clapState, setClapState] = useState(initialState);
+  const [{ clapRef, clapCountRef, countTotalRef }, setRefs] = useDOMRef();
 
   // Using useRef to maintain a state between renders an prevent
   // below useEffect to render on mount (without us clicking on clap)
@@ -66,16 +73,16 @@ const MediumClap = ({ children, updateUsageCount }) => {
     } else {
       // If useEffect ran but component as already mounted that means it is running
       // because clapState.count changed. So we ran our callback function to update count in <Usage>
-      console.log("useEffect invoked");
+      console.log('useEffect invoked');
       updateUsageCount && updateUsageCount(clapState.count);
     }
   }, [clapState.count]);
 
   // Pass node refs to our custom hooks
   const animationTimeline = useClapAnimation({
-    clapEl: elRefs.clapRef,
-    countEl: elRefs.clapCountRef,
-    clapTotalEl: elRefs.countTotalRef,
+    clapEl: clapRef,
+    countEl: clapCountRef,
+    clapTotalEl: countTotalRef,
   });
 
   const handleClapClick = () => {
