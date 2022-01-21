@@ -13,6 +13,7 @@ import styles from '../index.css';
 ==================================== **/
 import useClapAnimation from '../hooks/useClapAnimation';
 import useDOMRef from '../hooks/useDOMRef';
+import useClapState from '../hooks/useClapState';
 
 /** ====================================
  *      🔰SubComponents
@@ -37,28 +38,8 @@ const initialState = {
 ==================================== **/
 export const MediumClapContext = React.createContext();
 
-// const useDOMRef = () => {
-//   const [DOMRef, setRefState] = useState({}); // Object with ref for each node element
-
-//   // Set refs for each element we use on this
-//   // For each node we set the refs object list of objects with {[key of el]: the node element},
-//   // we get the key from a dataset element we created, data-refkey.
-//   // We use useCallback so we don't have to create a new instance of this function everytime the
-//   // components that will take this as prop will re-render
-//   const setRefs = useCallback((node) => {
-//     setRefState((prevRefState) => ({
-//       ...prevRefState,
-//       [node.dataset.refkey]: node,
-//     }));
-//   }, []);
-
-//   // On a useHook we should return the sate and the update state function
-//   return [DOMRef, setRefs];
-// };
-
 const MediumClap = ({ children, updateUsageCount }) => {
-  const MAXIMUM_USER_CLAP = 5;
-  const [clapState, setClapState] = useState(initialState);
+  const [clapState, setClapState] = useClapState(initialState);
   const [{ clapRef, clapCountRef, countTotalRef }, setRefs] = useDOMRef();
 
   // Using useRef to maintain a state between renders an prevent
@@ -89,14 +70,8 @@ const MediumClap = ({ children, updateUsageCount }) => {
     // 👉 prop from custom hook
     animationTimeline.replay();
 
-    setClapState((prevState) => ({
-      count: Math.min(prevState.count + 1, MAXIMUM_USER_CLAP),
-      countTotal:
-        clapState.count < MAXIMUM_USER_CLAP
-          ? prevState.countTotal + 1
-          : prevState.countTotal,
-      isClicked: true,
-    }));
+    // Update state using hook function
+    setClapState();
   };
 
   // Memoize the values we hare passing to the Context Provider
