@@ -22,6 +22,7 @@ Smaller Component used by <MediumClap />
 import ClapIcon from './ui/ClapIcon';
 import ClapCount from './ui/ClapCount';
 import CountTotal from './ui/CountTotal';
+import useEffectAfterMount from '../hooks/useEffectAfterMount';
 
 /** ====================================
  *      🔰 MediumClap
@@ -42,23 +43,6 @@ const MediumClap = ({ children, updateUsageCount }) => {
   const [clapState, setClapState] = useClapState(initialState);
   const [{ clapRef, clapCountRef, countTotalRef }, setRefs] = useDOMRef();
 
-  // Using useRef to maintain a state between renders an prevent
-  // below useEffect to render on mount (without us clicking on clap)
-  const componentJustMounted = useRef(true);
-
-  // Listen for count change
-  useEffect(() => {
-    // If component just mounted, we change the ref and do nothing else
-    if (componentJustMounted.current) {
-      componentJustMounted.current = false;
-    } else {
-      // If useEffect ran but component as already mounted that means it is running
-      // because clapState.count changed. So we ran our callback function to update count in <Usage>
-      console.log('useEffect invoked');
-      updateUsageCount && updateUsageCount(clapState.count);
-    }
-  }, [clapState.count]);
-
   // Pass node refs to our custom hooks
   const animationTimeline = useClapAnimation({
     clapEl: clapRef,
@@ -66,13 +50,10 @@ const MediumClap = ({ children, updateUsageCount }) => {
     clapTotalEl: countTotalRef,
   });
 
-  const handleClapClick = () => {
-    // 👉 prop from custom hook
+  // Run animation everytime clapState.count changes, except o the first mount
+  useEffectAfterMount(() => {
     animationTimeline.replay();
-
-    // Update state using hook function
-    setClapState();
-  };
+  }, [clapState.count]);
 
   // Memoize the values we hare passing to the Context Provider
   const memoizedValues = useMemo(() => {
@@ -88,7 +69,7 @@ const MediumClap = ({ children, updateUsageCount }) => {
         ref={setRefs}
         data-refkey="clapRef"
         className={styles.clap}
-        onClick={handleClapClick}
+        onClick={setClapState}
       >
         {children}
       </button>
