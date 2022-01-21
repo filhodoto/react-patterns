@@ -1,11 +1,11 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { generateRandomNumber } from '../utils/generateRandomNumber';
-import styles from './index.css';
+import { generateRandomNumber } from '../../utils/generateRandomNumber';
+import styles from '../index.css';
 
 /** ====================================
  *          Custom Hook
 ==================================== **/
-import useClapAnimation from './hooks/useClapAnimation';
+import useClapAnimation from '../hooks/useClapAnimation';
 
 /** ====================================
  *      🔰SubComponents
@@ -72,6 +72,7 @@ const MediumClap = () => {
       className={styles.clap}
       onClick={handleClapClick}
     >
+      {' '}
       <ClapIcon isClicked={isClicked} setRefs={setRefs} />
       <ClapCount count={count} setRefs={setRefs} />
       <CountTotal countTotal={countTotal} setRefs={setRefs} />
@@ -86,7 +87,12 @@ const MediumClap = () => {
 ==================================== **/
 
 const Usage = () => {
-  return <MediumClap />;
+  return (
+    <div>
+      <MediumClap />
+      <span>medium-clap</span>
+    </div>
+  );
 };
 
 export default Usage;
